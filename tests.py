@@ -22,7 +22,7 @@ class TestBooksCollector:
 
         # проверяем, что добавилось именно две
         # словарь books_rating, который нам возвращает метод get_books_rating, имеет длину 2
-        assert len(collector.books_genre.keys()) == 2
+        assert len(collector.get_books_genre().keys()) == 2
 
     # напиши свои тесты ниже
     # чтобы тесты были независимыми в каждом из них создавай отдельный экземпляр класса BooksCollector()
@@ -38,7 +38,7 @@ class TestBooksCollector:
         collector = BooksCollector()
         collector.add_new_book(name)
         collector.set_book_genre(name, genre)
-        assert collector.books_genre[name] == genre
+        assert collector.get_book_genre(name) == genre
 
     @pytest.mark.parametrize("name, genre", [
         ("", "Фантастика"),
@@ -51,51 +51,85 @@ class TestBooksCollector:
         collector = BooksCollector()
         collector.add_new_book(name)
         collector.set_book_genre(name, genre)
-        assert collector.books_genre.get(name) is None
+        assert collector.get_book_genre(name) is None
 
-    def test_get_book_genre(self):
+    @pytest.mark.parametrize("name, genre", [
+        ("Гарри Поттер и философский камень", "Фантастика")
+    ], ids=[
+        "Positive test for get_book_genre"
+    ])
+    def test_get_book_genre(self, name, genre):
         collector = BooksCollector()
-        collector.add_new_book('Гарри Поттер и философский камень')
-        collector.set_book_genre('Гарри Поттер и философский камень', 'Фантастика')
-        result = collector.get_book_genre('Гарри Поттер и философский камень')
-        assert result == 'Фантастика'
+        collector.add_new_book(name)
+        collector.set_book_genre(name, genre)
+        assert collector.get_book_genre(name) == genre
 
-    def test_get_books_with_specific_genre(self):
+    @pytest.mark.parametrize("name, genre", [
+        ("Гарри Поттер и философский камень", "Фантастика")
+    ], ids=[
+        "Positive test for get_books_with_specific_genre"
+    ])
+    def test_get_books_with_specific_genre(self, name, genre):
         collector = BooksCollector()
-        collector.add_new_book('Гарри Поттер и философский камень')
-        collector.set_book_genre('Гарри Поттер и философский камень', 'Фантастика')
-        result = collector.get_books_with_specific_genre('Фантастика')
-        assert result == ['Гарри Поттер и философский камень']
+        collector.add_new_book(name)
+        collector.set_book_genre(name, genre)
+        result = collector.get_books_with_specific_genre(genre)
+        assert result == [name]
 
-    def test_get_books_genre(self):
+    @pytest.mark.parametrize("name, genre", [
+        ("Гарри Поттер и философский камень", "Фантастика")
+    ], ids=[
+        "Positive test for get_book_genre"
+    ])
+    def test_get_books_genre(self, name, genre):
         collector = BooksCollector()
-        collector.add_new_book('Гарри Поттер и философский камень')
-        collector.set_book_genre('Гарри Поттер и философский камень', 'Фантастика')
+        collector.add_new_book(name)
+        collector.set_book_genre(name, genre)
         result = collector.get_books_genre()
-        assert result == {'Гарри Поттер и философский камень': 'Фантастика'}
+        assert result == {name: genre}
 
-    def test_get_books_for_children(self):
+    @pytest.mark.parametrize("name, genre", [
+        ("Гарри Поттер и философский камень", "Фантастика")
+    ], ids=[
+        "Positive test for get_books_for_children"
+    ])
+    def test_get_books_for_children(self, name, genre):
         collector = BooksCollector()
-        collector.add_new_book('Гарри Поттер и философский камень')
-        collector.set_book_genre('Гарри Поттер и философский камень', 'Фантастика')
+        collector.add_new_book(name)
+        collector.set_book_genre(name, genre)
         result = collector.get_books_for_children()
-        assert result == ['Гарри Поттер и философский камень']
+        assert result == [name]
 
-    def test_add_book_in_favorites(self):
+    @pytest.mark.parametrize("name, genre", [
+        ("Гарри Поттер и философский камень", "Фантастика")
+    ], ids=[
+        "Positive test for add_book_in_favorites"
+    ])
+    def test_add_book_in_favorites(self, name, genre):
         collector = BooksCollector()
-        collector.add_new_book('Гарри Поттер и философский камень')
-        collector.add_book_in_favorites('Гарри Поттер и философский камень')
-        assert 'Гарри Поттер и философский камень' in collector.get_list_of_favorites_books()
+        collector.add_new_book(name)
+        collector.add_book_in_favorites(name)
+        assert name in collector.get_list_of_favorites_books()
 
-    def test_delete_book_from_favorites(self):
+    @pytest.mark.parametrize("name, genre", [
+        ("Гарри Поттер и философский камень", "Фантастика")
+    ], ids=[
+        "Positive test for delete_book_from_favorites"
+    ])
+    def test_delete_book_from_favorites(self, name, genre):
         collector = BooksCollector()
-        collector.add_new_book('Гарри Поттер и философский камень')
-        collector.add_book_in_favorites('Гарри Поттер и философский камень')
-        collector.delete_book_from_favorites('Гарри Поттер и философский камень')
-        assert 'Гарри Поттер и философский камень' not in collector.get_list_of_favorites_books()
+        collector.add_new_book(name)
+        collector.add_book_in_favorites(name)
+        collector.delete_book_from_favorites(name)
+        assert name not in collector.get_list_of_favorites_books()
 
-    def test_get_list_of_favorites_books(self):
+    @pytest.mark.parametrize("name, genre", [
+        ("Гарри Поттер и философский камень", "Фантастика")
+    ], ids=[
+        "Positive test for get_list_of_favorites_books"
+    ])
+    def test_get_list_of_favorites_books(self, name, genre):
         collector = BooksCollector()
-        collector.add_new_book('Гарри Поттер и философский камень')
-        collector.add_book_in_favorites('Гарри Поттер и философский камень')
-        assert 'Гарри Поттер и философский камень' in collector.get_list_of_favorites_books()
+        collector.add_new_book(name)
+        collector.add_book_in_favorites(name)
+        assert name in collector.get_list_of_favorites_books()
